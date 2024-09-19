@@ -1,0 +1,2 @@
+miniproject1
+-DCATKIN_DEVEL_PREFIX=/home/jerefefe/ros_workspace/devel -DCMAKE_INSTALL_PREFIX=/home/jerefefe/ros_workspace/install -G Unix Makefiles

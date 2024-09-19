@@ -2,4 +2,4 @@
 frames.*
 setup_cached
 *.cmake
-*.stamps
+*.stamp

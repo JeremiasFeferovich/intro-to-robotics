@@ -1,5 +1,6 @@
 .catkin_workspace
 frames.*
-setup_cached
+setup_cached.sh
 *.cmake
-*.stamp
+Makefile.cmake
+package.xml.stamp

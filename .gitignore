@@ -1,1 +1,5 @@
 .catkin_workspace
+frames.*
+setup_cached
+*.cmake
+*.stamps

@@ -5,3 +5,4 @@ setup_cached.sh
 Makefile.cmake
 package.xml.stamp
 /build/*
+/src/turtlebot3_datasets/data/*

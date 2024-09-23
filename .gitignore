@@ -4,4 +4,4 @@ setup_cached.sh
 *.cmake
 Makefile.cmake
 package.xml.stamp
-build/*
+/build/*

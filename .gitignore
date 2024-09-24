@@ -6,4 +6,6 @@ Makefile.cmake
 package.xml.stamp
 ./build/*
 /build/*
+/devel/*
+./devel/*
 /src/turtlebot3_datasets/data/*

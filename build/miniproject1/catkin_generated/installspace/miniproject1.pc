@@ -1,8 +1,0 @@
-prefix=/home/jerefefe/ros_workspace/install
-
-Name: miniproject1
-Description: Description of miniproject1
-Version: 0.0.0
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: 

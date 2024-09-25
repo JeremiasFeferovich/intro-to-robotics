@@ -5,10 +5,11 @@ import rosbag
 import sys
 import argparse
 import numpy
+import csv
 from tf2_ros import Buffer, TransformListener
 from rosgraph_msgs.msg import Clock
-import matplotlib.pyplot as plt
 import time
+import tf
 
 
 class TransformHandler():
@@ -27,7 +28,17 @@ class TransformHandler():
 
 def get_errors(transform):
     tr = transform.transform.translation
-    return numpy.linalg.norm([tr.x, tr.y])
+    # Calculate the error for X and Y axes only
+    translation_error_x = tr.x
+    translation_error_y = tr.y
+
+    # Calculate the orientation error using quaternions (for Yaw only)
+    rot = transform.transform.rotation
+    orientation_quat = [rot.x, rot.y, rot.z, rot.w]
+    # Convert to roll, pitch, yaw (we only care about yaw here)
+    _, _, yaw = tf.transformations.euler_from_quaternion(orientation_quat)
+
+    return translation_error_x, translation_error_y, yaw
 
 
 # Argument parsing
@@ -57,7 +68,7 @@ handler = TransformHandler(gt_frame, est_frame, max_time_between=20)  # 500ms
 # Variables to store error values and time
 error_values = []
 start_time = time.time()
-duration = 30  # Run for 30 seconds
+duration = 60  # Run for 60 seconds
 sampling_rate = 1000  # Hz
 
 rospy.loginfo('Listening to frames and computing error, press Ctrl-C to stop')
@@ -69,17 +80,20 @@ try:
         elapsed_time = current_time - start_time
 
         if elapsed_time > duration:
-            rospy.loginfo("30 seconds passed. Stopping error collection.")
+            rospy.loginfo("60 seconds passed. Stopping error collection.")
             break
 
         try:
             t = handler.get_transform(gt_frame, est_frame)
         except Exception as e:
             rospy.logwarn(e)
-            error_values.append(None)  # Append None if an error occurs
+            # Append None if an error occurs
+            error_values.append((elapsed_time, None, None, None))
         else:
-            eucl = get_errors(t)
-            error_values.append(eucl * 1e3)  # Convert to mm and store error
+            translation_error_x, translation_error_y, yaw = get_errors(t)
+            # Store error in X, Y, and Yaw
+            error_values.append(
+                (elapsed_time, translation_error_x * 1e3, translation_error_y * 1e3, yaw))
 
         try:
             sleeper.sleep()
@@ -89,24 +103,18 @@ try:
 except rospy.exceptions.ROSInterruptException:
     pass
 
-# After 30 seconds, plot the error values
-rospy.loginfo("Generating the error graph...")
+# After 60 seconds, save the error values to a CSV file
+rospy.loginfo("Saving error values to a CSV file...")
 
-# Clean up None values from the list
-error_values = [x for x in error_values if x is not None]
+cleaned_error_values = [row for row in error_values if row[1] is not None]
 
-# Create a time vector
-time_values = numpy.linspace(0, duration, len(error_values))
+# Write the cleaned data to a CSV file
+csv_file = 'error_data.csv'
+csv_file = 'error_data.csv'
+with open(csv_file, mode='w', newline='') as file:
+    writer = csv.writer(file)
+    writer.writerow(["Time (seconds)", "Error X (mm)",
+                    "Error Y (mm)", "Yaw (rad)"])  # Updated header row
+    writer.writerows(cleaned_error_values)
 
-# Plot the errors
-plt.figure()
-plt.plot(time_values, error_values, label='Error (mm)')
-plt.xlabel('Time (seconds)')
-plt.ylabel('Error (mm)')
-plt.title('Error over 30 seconds')
-plt.legend()
-plt.grid(True)
-
-# Save and show the plot
-plt.savefig('error_plot.png')
-plt.show()
+rospy.loginfo(f"Data saved to {csv_file}")

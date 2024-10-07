@@ -19,8 +19,8 @@
           args="--clock $(find turtlebot3_datasets)/data/$(arg bag_name).bag"/>
 
   <!-- EKF robot localisation -->
-  <node pkg="robot_localization" type="ekf_localization_node" name="robot_localization_ekf_node_odom" clear_params="true">
-    <param name="frequency" value="20." />
+  <!-- <node pkg="robot_localization" type="ekf_localization_node" name="robot_localization_ekf_node_odom" clear_params="true">
+    <param name="frequency" value="30" />
     <param name="sensor_timeout" value="0.2" />
     <param name="two_d_mode" value="true" />
     <param name="publish_tf" value="true" />
@@ -30,7 +30,6 @@
     <param name="world_frame" value="map" />
     <param name="odom0" value="odom" />
     
-    <!-- odom0_config -->
     <rosparam param="odom0_config">
       [false, false, false,
        false, false, false,
@@ -42,7 +41,6 @@
     <param name="odom0_relative" value="false" />
     <param name="imu0" value="imu" />
     
-    <!-- imu0_config -->
     <rosparam param="imu0_config">
       [false, false, false,
        false, false, true,
@@ -52,17 +50,18 @@
     </rosparam>
     
     <param name="imu0_relative" value="true" />
-  </node>
+  </node> -->
 
   <!-- AMCL-->
-  <!-- <node name="amcl" pkg="amcl" type="amcl" output="screen">
+  <node name="amcl" pkg="amcl" type="amcl" output="screen">
  
     <param name="use_map_topic" value="false"/>
     <param name="odom_frame_id" value="odom"/>
     <param name="base_frame_id" value="base_link"/>
     <param name="global_frame_id" value="map"/>
-    <param name="update_min_d" value="0.2"/>
-    <param name="update_min_a" value="0.1"/>
+    <param name="update_min_d" value="0.1"/>
+    <param name="update_min_a" value="0.05"/>
+    <param name="update_frequency" value="30.0"/>
     <param name="laser_max_beams" value="30"/>
     <param name="laser_min_range" value="0.1"/>
     <param name="laser_max_range" value="12.0"/>
@@ -73,7 +72,7 @@
     <param name="initial_cov_xx" value="0.5"/>
     <param name="initial_cov_yy" value="0.5"/>
     <param name="initial_cov_aa" value="0.2"/>
-  </node> -->
+  </node>
   <!-- Groundtruth path -->
 
   <!-- Estimated path -->

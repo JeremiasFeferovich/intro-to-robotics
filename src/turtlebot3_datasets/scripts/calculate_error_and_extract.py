@@ -65,8 +65,9 @@ rospy.sleep(0.00001)
 
 handler = TransformHandler(gt_frame, est_frame, max_time_between=20)  # 500ms
 
-# Variables to store error values and time
+# Variables to store error values, GT path, and time
 error_values = []
+gt_path = []
 start_time = time.time()
 duration = 60  # Run for 60 seconds
 sampling_rate = 1000  # Hz
@@ -84,16 +85,31 @@ try:
             break
 
         try:
-            t = handler.get_transform(gt_frame, est_frame)
+            gt_transform = handler.get_transform(gt_frame, est_frame)
         except Exception as e:
-            rospy.logwarn(e)
-            # Append None if an error occurs
-            error_values.append((elapsed_time, None, None, None))
+            rospy.logwarn(f"Failed to get GT transform: {e}")
+            # Append None for GT path if an error occurs
+            gt_path.append((elapsed_time, None, None, None))
         else:
-            translation_error_x, translation_error_y, yaw = get_errors(t)
-            # Store error in X, Y, and Yaw
-            error_values.append(
-                (elapsed_time, translation_error_x * 1e3, translation_error_y * 1e3, yaw))
+            # Get the ground truth X, Y, and Yaw
+            gt_translation_error_x, gt_translation_error_y, gt_yaw = get_errors(
+                gt_transform)
+            # Store ground truth position and orientation (Yaw)
+            gt_path.append((elapsed_time, gt_translation_error_x *
+                           1e3, gt_translation_error_y * 1e3, gt_yaw))
+
+            try:
+                # Get estimated transform (for error calculation)
+                t = handler.get_transform(gt_frame, est_frame)
+            except Exception as e:
+                rospy.logwarn(f"Failed to get estimated transform: {e}")
+                # Append None if an error occurs
+                error_values.append((elapsed_time, None, None, None))
+            else:
+                translation_error_x, translation_error_y, yaw = get_errors(t)
+                # Store error in X, Y, and Yaw
+                error_values.append(
+                    (elapsed_time, translation_error_x * 1e3, translation_error_y * 1e3, yaw))
 
         try:
             sleeper.sleep()
@@ -103,18 +119,27 @@ try:
 except rospy.exceptions.ROSInterruptException:
     pass
 
-# After 60 seconds, save the error values to a CSV file
-rospy.loginfo("Saving error values to a CSV file...")
+# After 60 seconds, save the error values and ground truth path to CSV files
+rospy.loginfo("Saving error values and GT path to CSV files...")
 
 cleaned_error_values = [row for row in error_values if row[1] is not None]
+cleaned_gt_path = [row for row in gt_path if row[1] is not None]
 
-# Write the cleaned data to a CSV file
-csv_file = 'error_data.csv'
+# Write error values to a CSV file
 csv_file = 'error_data.csv'
 with open(csv_file, mode='w', newline='') as file:
     writer = csv.writer(file)
     writer.writerow(["Time (seconds)", "Error X (mm)",
-                    "Error Y (mm)", "Yaw (rad)"])  # Updated header row
+                    "Error Y (mm)", "Yaw (rad)"])
     writer.writerows(cleaned_error_values)
 
-rospy.loginfo(f"Data saved to {csv_file}")
+# Write GT path to a separate CSV file
+gt_csv_file = 'gt_path.csv'
+with open(gt_csv_file, mode='w', newline='') as file:
+    writer = csv.writer(file)
+    writer.writerow(["Time (seconds)", "GT X (mm)",
+                    "GT Y (mm)", "GT Yaw (rad)"])
+    writer.writerows(cleaned_gt_path)
+
+rospy.loginfo(
+    f"Data saved to {csv_file} and ground truth path saved to {gt_csv_file}")

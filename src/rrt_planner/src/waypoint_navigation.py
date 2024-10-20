@@ -50,10 +50,10 @@ if __name__ == '__main__':
 
         # Define your waypoints here (x, y, yaw in degrees)
         waypoints = [
-            (0.7, 1.2, 0.0),   # Waypoint 1
-            (2.0, 1.0, 90.0),  # Waypoint 2
-            (2.0, 2.0, 180.0),  # Waypoint 3
-            (1.0, 2.0, 270.0)  # Waypoint 4
+            (3.5, -4.5, 0.0),   # Waypoint 1
+            (4.5, -1.9, 90.0),  # Waypoint 2
+            (6.7, -2.75, 180.0),  # Waypoint 3
+            (5.82, -6.16, 270.0)  # Waypoint 4
         ]
 
         # Loop through each waypoint and send the next after completing the previous one

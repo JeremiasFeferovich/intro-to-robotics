@@ -1,0 +1,8 @@
+prefix=/home/jerefefe/intro-to-robotics/devel
+
+Name: miniproject1
+Description: Description of miniproject1
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

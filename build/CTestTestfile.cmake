@@ -5,5 +5,5 @@
 # This file includes the relevant testing commands required for 
 # testing this directory and lists subdirectories to be tested as well.
 subdirs("gtest")
-subdirs("miniproject_1")
-subdirs("miniproject_2")
+subdirs("turtlebot3_datasets")
+subdirs("rrt_planner")

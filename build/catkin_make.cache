@@ -1,2 +1,2 @@
-miniproject_1:miniproject_2
+rrt_planner:turtlebot3_datasets
 -DCATKIN_DEVEL_PREFIX=/home/jerefefe/intro-to-robotics/devel -DCMAKE_INSTALL_PREFIX=/home/jerefefe/intro-to-robotics/install -G Unix Makefiles

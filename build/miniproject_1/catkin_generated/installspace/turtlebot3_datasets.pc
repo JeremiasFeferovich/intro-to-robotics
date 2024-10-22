@@ -1,8 +1,0 @@
-prefix=/home/jerefefe/intro-to-robotics/install
-
-Name: turtlebot3_datasets
-Description: Description of turtlebot3_datasets
-Version: 0.0.1
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: 

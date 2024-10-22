@@ -46,9 +46,9 @@ for i, (global_plan_x, global_plan_y) in enumerate(global_plan_segments[:-32]):
                 color='orange', marker='x', s=50)
 
 plt.scatter(amcl_x[0], amcl_y[0], color='purple',
-            marker='*', s=100, label='Start')
-plt.scatter(amcl_x[-1], amcl_y[-1], color='orange',
-            marker='*', s=100, label='End')
+            marker='o', s=150, label='Start')
+plt.scatter(amcl_x[-1], amcl_y[-1], color='black',
+            marker='*', s=200, label='End')
 
 plt.xlabel('Position X')
 plt.ylabel('Position Y')

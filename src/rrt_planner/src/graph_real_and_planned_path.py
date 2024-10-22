@@ -50,8 +50,8 @@ plt.scatter(amcl_x[0], amcl_y[0], color='purple',
 plt.scatter(amcl_x[-1], amcl_y[-1], color='black',
             marker='*', s=200, label='End')
 
-plt.xlabel('Position X')
-plt.ylabel('Position Y')
+plt.xlabel('Position X[m]')
+plt.ylabel('Position Y[m]')
 plt.title('Actual vs Planned Path with Multiple Goals')
 
 plt.legend()

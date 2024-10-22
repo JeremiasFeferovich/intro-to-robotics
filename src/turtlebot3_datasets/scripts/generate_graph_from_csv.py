@@ -26,10 +26,8 @@ def read_csv(file_name):
 
 
 def plot_error_graphs(time_values, error_x, error_y, yaw_errors, output_prefix):
-    # Calculate the sum of absolute X and Y errors
     sum_abs_xy_errors = np.abs(error_x) + np.abs(error_y)
 
-    # Plot absolute translation errors (X and Y)
     plt.figure()
     plt.plot(time_values, np.abs(error_x), label='|Error X| (mm)')
     plt.plot(time_values, np.abs(error_y), label='|Error Y| (mm)')
@@ -41,7 +39,6 @@ def plot_error_graphs(time_values, error_x, error_y, yaw_errors, output_prefix):
     plt.savefig(f'{output_prefix}_abs_translation_errors.png')
     plt.close()
 
-    # Plot sum of absolute X and Y errors
     plt.figure()
     plt.plot(time_values, sum_abs_xy_errors,
              label='Sum of |Error X| and |Error Y| (mm)')
@@ -53,7 +50,6 @@ def plot_error_graphs(time_values, error_x, error_y, yaw_errors, output_prefix):
     plt.savefig(f'{output_prefix}_sum_abs_xy_errors.png')
     plt.close()
 
-    # Plot absolute orientation error (Yaw)
     plt.figure()
     plt.plot(time_values, np.abs(yaw_errors), label='|Yaw| (rad)')
     plt.xlabel('Time (seconds)')
@@ -66,7 +62,6 @@ def plot_error_graphs(time_values, error_x, error_y, yaw_errors, output_prefix):
 
 
 if __name__ == "__main__":
-    # Argument parsing for CSV file path
     parser = argparse.ArgumentParser(
         description="Generate error graphs (X, Y, Yaw) from CSV file.")
     parser.add_argument(
@@ -79,8 +74,6 @@ if __name__ == "__main__":
     csv_file = args.csv_file
     output_prefix = args.output_prefix
 
-    # Read data from CSV
     time_values, error_x, error_y, yaw_errors = read_csv(csv_file)
 
-    # Plot the graphs
     plot_error_graphs(time_values, error_x, error_y, yaw_errors, output_prefix)
